@@ -1,17 +1,8 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { generateGreeting, generateCardImage, generateSpeech } from './services/geminiService';
 import { GreetingConfig, StyleOption } from './types';
-
-const Header = lazy(() => import('./components/Header').then(m => ({ default: m.Header })));
-const Lantern = lazy(() => import('./components/Lantern').then(m => ({ default: m.Lantern })));
-
-const LoadingFallback: React.FC = () => (
-  <div className="flex items-center justify-center h-20">
-    <div className="animate-pulse text-primary">
-      <span className="material-symbols-outlined text-3xl">hourglass_empty</span>
-    </div>
-  </div>
-);
+import { Header } from './components/Header';
+import { Lantern } from './components/Lantern';
 
 // Simple confetti component
 const Confetti: React.FC<{ active: boolean }> = ({ active }) => {
@@ -219,41 +210,39 @@ const App: React.FC = () => {
     if (!hasKey) {
         return (
             <>
-                <Suspense fallback={<LoadingFallback />}>
-                    <div className="fixed inset-0 bg-background-light dark:bg-background-dark flex items-center justify-center z-50 p-4">
-                         <Lantern type="fu" className="absolute top-0 left-8 z-40" />
-                         <Lantern type="chun" className="absolute top-0 right-8 z-40" delay />
-                     
-                     <div className="max-w-md w-full bg-white dark:bg-[#2a1212] rounded-3xl p-8 shadow-2xl border border-red-100 dark:border-red-900/30 text-center relative overflow-hidden">
-                        <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(#d92828 1px, transparent 1px)", backgroundSize: "24px 24px" }}></div>
-                        
-                        <div className="relative z-10 flex flex-col items-center gap-6">
-                            <div className="size-20 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-2 animate-float">
-                                <span className="material-symbols-outlined text-4xl text-primary">diamond</span>
-                            </div>
-                            
-                            <div>
-                                <h2 className="text-2xl font-black text-[#181111] dark:text-white mb-3">开启 Pro 级体验</h2>
-                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
-                                    本应用使用 <strong>Gemini 3 Pro Image</strong> 模型为您生成极致画质的新春贺卡。此模型需要连接您的 Google Cloud API Key。
-                                </p>
-                            </div>
+                <div className="fixed inset-0 bg-background-light dark:bg-background-dark flex items-center justify-center z-50 p-4">
+                     <Lantern type="fu" className="absolute top-0 left-8 z-40" />
+                     <Lantern type="chun" className="absolute top-0 right-8 z-40" delay />
 
-                            <button 
-                                onClick={handleSelectKey}
-                                className="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:bg-red-700 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-                            >
-                                <span className="material-symbols-outlined">key</span>
-                                连接 API Key
-                            </button>
+                 <div className="max-w-md w-full bg-white dark:bg-[#2a1212] rounded-3xl p-8 shadow-2xl border border-red-100 dark:border-red-900/30 text-center relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(#d92828 1px, transparent 1px)", backgroundSize: "24px 24px" }}></div>
 
-                            <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline font-bold">
-                                了解关于 API 计费的信息
-                            </a>
+                    <div className="relative z-10 flex flex-col items-center gap-6">
+                        <div className="size-20 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-2 animate-float">
+                            <span className="material-symbols-outlined text-4xl text-primary">diamond</span>
                         </div>
-                     </div>
-                </div>
-                </Suspense>
+
+                        <div>
+                            <h2 className="text-2xl font-black text-[#181111] dark:text-white mb-3">开启 Pro 级体验</h2>
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
+                                本应用使用 <strong>Gemini 3 Pro Image</strong> 模型为您生成极致画质的新春贺卡。此模型需要连接您的 Google Cloud API Key。
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={handleSelectKey}
+                            className="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:bg-red-700 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                        >
+                            <span className="material-symbols-outlined">key</span>
+                            连接 API Key
+                        </button>
+
+                        <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline font-bold">
+                            了解关于 API 计费的信息
+                        </a>
+                    </div>
+                 </div>
+            </div>
             </>
         );
     }
@@ -275,14 +264,10 @@ const App: React.FC = () => {
             `}</style>
 
             <Confetti active={status === 'success'} />
-            <Suspense fallback={<LoadingFallback />}>
-                <Lantern type="fu" className="hidden lg:block absolute top-0 left-8 z-40" />
-                <Lantern type="chun" className="hidden lg:block absolute top-0 right-8 z-40" delay />
-            </Suspense>
+            <Lantern type="fu" className="hidden lg:block absolute top-0 left-8 z-40" />
+            <Lantern type="chun" className="hidden lg:block absolute top-0 right-8 z-40" delay />
 
-            <Suspense fallback={<LoadingFallback />}>
-                <Header />
-            </Suspense>
+            <Header />
 
             <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8 md:py-12 flex flex-col items-center z-10">
                 {/* Hero Section */}
